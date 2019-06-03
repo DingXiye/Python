@@ -1,0 +1,53 @@
+import numpy as np
+x=np.random.random(10)
+y=np.random.random(10)
+
+
+#马氏距离要求样本数要大于维数，否则无法求协方差矩阵
+#此处进行转置，表示10个样本，每个样本2维
+X=np.vstack([x,y])
+X = X.T
+# XT=X.T
+# print("XT",XT)
+# #方法一：根据公式求解
+# S=np.cov(X)   #两个维度之间协方差矩阵
+# print("S",S)
+# SI = np.linalg.inv(S) #协方差矩阵的逆矩阵
+# #马氏距离计算两个样本之间的距离，此处共有10个样本，两两组合，共有45个距离。
+# n=XT.shape[0]
+# d1=[]
+# for i in range(0,n):
+#     for j in range(i+1,n):
+#         delta=XT[i]-XT[j]
+#         d=np.sqrt(np.dot(np.dot(delta,SI),delta.T))
+#         d1.append(d)
+# # print(d1)
+# # 方法二：根据scipy库求解
+# from scipy.spatial.distance import pdist
+# d2=pdist(XT,'mahalanobis')
+
+# print(d2)
+
+import mahakil
+d3 = mahakil.MAHAKIL().mahalanobis_distance(X)
+print("工具包",d3)
+
+def MAHA_distance(X):
+        n=X.shape[0]
+        XT = X.T
+        S=np.cov(XT)   #维度之间协方差矩阵,cov求得的是变量之间的协方差，默认一行为一个变量，求维度协方差要转置
+        
+        mu = np.mean(X, axis=0) 
+        print("mu",mu)
+        SI = np.linalg.inv(S) #协方差矩阵的逆矩阵
+        # print("SI",SI)
+        d1=[]
+        for i in range(0,n):
+                delta=X[i]-mu
+                print("delta",delta)
+                d=np.sqrt(np.dot(np.dot(delta,SI),delta.T))
+                d1.append(d)
+        return d1
+
+print("自己算",MAHA_distance(X))
+
